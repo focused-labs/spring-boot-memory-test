@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memory-test-deployment
+  labels:
+    app: memorytest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: memorytest
+  template:
+    metadata:
+      labels:
+        app: memorytest
+    spec:
+      containers:
+        - name: memorytest
+          image: <replace-with-registry>/memory-test:latest
