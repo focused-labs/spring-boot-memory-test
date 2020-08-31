@@ -18,7 +18,7 @@ Free Memory:0.17023861
 Total Memory:0.20892876
 Max Memory:3.3165803
 ##############################
-```
+````
 
 After eat-memory?chunks=100&size=100
 
@@ -79,6 +79,45 @@ Aug 30 21:02:27 memory-test-deployment-558bc598c5-xcl5f memorytest Max Memory:6.
 Aug 30 21:02:27 memory-test-deployment-558bc598c5-xcl5f memorytest ##############################
 
 Kubernetes kills the pod rather then letting it OOM
+
+---
+
+With 
+ENTRYPOINT ["java","-XX:InitialRAMPercentage=50","-XX:MaxRAMPercentage=50","-jar","/app.jar"]
+
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 2Gi
+
+`jcmd 1 VM.flags`
+
+> -XX:CICompilerCount=2 -XX:InitialHeapSize=2147483648 -XX:InitialRAMPercentage=50.000000 -XX:MaxHeapSize=2147483648 -XX:MaxNewSize=715784192 -XX:MaxRAM=4294967296 -XX:MaxRAMPercentage=50.000000 -XX:MinHeapDeltaBytes=196608 -XX:MinHeapSize=8388608 -XX:NewSize=715784192 -XX:NonNMethodCodeHeapSize=5826188 -XX:NonProfiledCodeHeapSize=122916026 -XX:OldSize=1431699456 -XX:ProfiledCodeHeapSize=122916026 -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:SoftMaxHeapSize=2147483648 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseFastUnorderedTimeStamps -XX:+UseSerialGC
+
+`jcmd 1 VM.command_line`
+
+> VM Arguments:
+jvm_args: -XX:InitialRAMPercentage=50 -XX:MaxRAMPercentage=50
+java_command: /app.jar
+java_class_path (initial): /app.jar
+Launcher Type: SUN_STANDARD
+
+Aug 30 21:58:48 memory-test-deployment-7877fb46bd-fphbh memorytest ######## Memory Stats ########
+Aug 30 21:58:48 memory-test-deployment-7877fb46bd-fphbh memorytest Used Memory:0.20950332
+Aug 30 21:58:48 memory-test-deployment-7877fb46bd-fphbh memorytest Free Memory:1.866415
+Aug 30 21:58:48 memory-test-deployment-7877fb46bd-fphbh memorytest Total Memory:2.0759184
+Aug 30 21:58:48 memory-test-deployment-7877fb46bd-fphbh memorytest Max Memory:2.0759184
+Aug 30 21:58:48 memory-test-deployment-7877fb46bd-fphbh memorytest ##############################
+
+OOM happens, leaving a stack trace and pod is not killed
+
+Aug 30 22:02:34 memory-test-deployment-7877fb46bd-fphbh memorytest ######## Memory Stats ########
+Aug 30 22:02:34 memory-test-deployment-7877fb46bd-fphbh memorytest Used Memory:1.9300007
+Aug 30 22:02:34 memory-test-deployment-7877fb46bd-fphbh memorytest Free Memory:0.14591767
+Aug 30 22:02:34 memory-test-deployment-7877fb46bd-fphbh memorytest Total Memory:2.0759184
+Aug 30 22:02:34 memory-test-deployment-7877fb46bd-fphbh memorytest Max Memory:2.0759184
+Aug 30 22:02:34 memory-test-deployment-7877fb46bd-fphbh memorytest ##############################
 
 # Resources
 
