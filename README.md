@@ -79,3 +79,12 @@ Aug 30 21:02:27 memory-test-deployment-558bc598c5-xcl5f memorytest Max Memory:6.
 Aug 30 21:02:27 memory-test-deployment-558bc598c5-xcl5f memorytest ##############################
 
 Kubernetes kills the pod rather then letting it OOM
+
+# Resources
+
+* https://medium.com/@yortuc/jvm-memory-allocation-in-docker-container-a26bbce3a3f2
+* https://medium.com/adorsys/jvm-memory-settings-in-a-container-environment-64b0840e1d9e
+* https://stackoverflow.com/questions/54591870/mismatch-between-spring-actuators-jvm-memory-max-metric-and-runtime-getruntim
+* https://merikan.com/2019/04/jvm-in-a-container/
+* https://srvaroa.github.io/jvm/kubernetes/memory/docker/oomkiller/2019/05/29/k8s-and-java.html
+* https://stackoverflow.com/questions/54292282/clarification-of-meaning-new-jvm-memory-parameters-initialrampercentage-and-minr
