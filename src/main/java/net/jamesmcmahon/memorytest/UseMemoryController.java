@@ -12,6 +12,7 @@ import java.util.List;
 import static java.lang.Runtime.getRuntime;
 import static net.jamesmcmahon.memorytest.Constants.GIGABYTE;
 import static net.jamesmcmahon.memorytest.Constants.MEGABYTE;
+import static net.jamesmcmahon.memorytest.Stats.printMemoryStats;
 
 @Controller
 @RequestMapping("memory")
@@ -22,6 +23,12 @@ public class UseMemoryController {
             @RequestParam("size") int size) {
         UseMemoryController.allocateBytes(chunks, size);
         return ResponseEntity.ok().body(getRuntime().freeMemory() / (float) GIGABYTE);
+    }
+
+    @GetMapping("print-memory")
+    public ResponseEntity printMemory() {
+        printMemoryStats();
+        return ResponseEntity.ok().build();
     }
 
     private static List<byte[]> allocateBytes(int chunks, int chunkSize) {
