@@ -324,6 +324,52 @@ After eat-memory?chunks=100&size=1000
 OOM happens, leaving a stack trace and pod IS killed
 (tested this one agin on a fresh start and it's the size 1000 isn't what immediatly kills it, it's the repeat)
 
+---
+
+(To shrink a JVM)
+
+ENTRYPOINT ["java","-XX:MaxHeapFreeRatio=10","-XX:InitialRAMPercentage=90","-XX:MaxRAMPercentage=90","-jar","/app.jar"]
+
+> kubectl -n james-test logs  memory-test-deployment-7596dc4567-q5rhf
+
+MinHeapFreeRatio (40) must be less than or equal to MaxHeapFreeRatio (10)
+MaxHeapFreeRatio (10) must be greater than or equal to MinHeapFreeRatio (40)
+Error: Could not create the Java Virtual Machine.
+Error: A fatal exception has occurred. Program will exit.
+
+ENTRYPOINT ["java","-XX:MinHeapFreeRatio=20","-XX:MaxHeapFreeRatio=20","-XX:InitialRAMPercentage=90","-XX:MaxRAMPercentage=90","-jar","/app.jar"]
+
+Aug 31 21:35:58 memory-test-deployment-7596dc4567-sm9sd memorytest ######## Memory Stats ########
+Aug 31 21:35:58 memory-test-deployment-7596dc4567-sm9sd memorytest Used Memory:0.28749928
+Aug 31 21:35:58 memory-test-deployment-7596dc4567-sm9sd memorytest Free Memory:3.4508052
+Aug 31 21:35:58 memory-test-deployment-7596dc4567-sm9sd memorytest Total Memory:3.7383046
+Aug 31 21:35:58 memory-test-deployment-7596dc4567-sm9sd memorytest Max Memory:3.7383046
+Aug 31 21:35:58 memory-test-deployment-7596dc4567-sm9sd memorytest ##############################
+
+After eat-memory?chunks=100&size=100
+OOM happens, leaving a stack trace and pod is not killed
+
+When does it shrink? (Seems not fast)
+
+Aug 31 21:37:22 memory-test-deployment-7596dc4567-sm9sd memorytest ######## Memory Stats ########
+Aug 31 21:37:22 memory-test-deployment-7596dc4567-sm9sd memorytest Used Memory:3.6418724
+Aug 31 21:37:22 memory-test-deployment-7596dc4567-sm9sd memorytest Free Memory:0.09643176
+Aug 31 21:37:22 memory-test-deployment-7596dc4567-sm9sd memorytest Total Memory:3.7383046
+Aug 31 21:37:22 memory-test-deployment-7596dc4567-sm9sd memorytest Max Memory:3.7383046
+Aug 31 21:37:22 memory-test-deployment-7596dc4567-sm9sd memorytest ##############################
+Aug 31 21:40:11 memory-test-deployment-7596dc4567-sm9sd memorytest ######## Memory Stats ########
+Aug 31 21:40:11 memory-test-deployment-7596dc4567-sm9sd memorytest Used Memory:3.6421561
+Aug 31 21:40:11 memory-test-deployment-7596dc4567-sm9sd memorytest Free Memory:0.09614837
+Aug 31 21:40:11 memory-test-deployment-7596dc4567-sm9sd memorytest Total Memory:3.7383046
+Aug 31 21:40:11 memory-test-deployment-7596dc4567-sm9sd memorytest Max Memory:3.7383046
+Aug 31 21:40:11 memory-test-deployment-7596dc4567-sm9sd memorytest ##############################
+Aug 31 22:00:17 memory-test-deployment-7596dc4567-sm9sd memorytest ######## Memory Stats ########
+Aug 31 22:00:17 memory-test-deployment-7596dc4567-sm9sd memorytest Used Memory:3.6423526
+Aug 31 22:00:17 memory-test-deployment-7596dc4567-sm9sd memorytest Free Memory:0.09595139
+Aug 31 22:00:17 memory-test-deployment-7596dc4567-sm9sd memorytest Total Memory:3.7383046
+Aug 31 22:00:17 memory-test-deployment-7596dc4567-sm9sd memorytest Max Memory:3.7383046
+Aug 31 22:00:17 memory-test-deployment-7596dc4567-sm9sd memorytest ##############################
+
 # Resources
 
 * https://medium.com/@yortuc/jvm-memory-allocation-in-docker-container-a26bbce3a3f2
