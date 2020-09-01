@@ -119,6 +119,211 @@ Aug 30 22:02:34 memory-test-deployment-7877fb46bd-fphbh memorytest Total Memory:
 Aug 30 22:02:34 memory-test-deployment-7877fb46bd-fphbh memorytest Max Memory:2.0759184
 Aug 30 22:02:34 memory-test-deployment-7877fb46bd-fphbh memorytest ##############################
 
+---
+
+With 
+ENTRYPOINT ["java","-XX:InitialRAMPercentage=50","-XX:MaxRAMPercentage=50","-jar","/app.jar"]
+
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 4Gi
+
+`jcmd 1 VM.flags`
+
+> -XX:CICompilerCount=2 -XX:InitialHeapSize=2147483648 -XX:InitialRAMPercentage=50.000000 -XX:MaxHeapSize=2147483648 -XX:MaxNewSize=715784192 -XX:MaxRAM=4294967296 -XX:MaxRAMPercentage=50.000000 -XX:MinHeapDeltaBytes=196608 -XX:MinHeapSize=8388608 -XX:NewSize=715784192 -XX:NonNMethodCodeHeapSize=5826188 -XX:NonProfiledCodeHeapSize=122916026 -XX:OldSize=1431699456 -XX:ProfiledCodeHeapSize=122916026 -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:SoftMaxHeapSize=2147483648 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseFastUnorderedTimeStamps -XX:+UseSerialGC
+
+`jcmd 1 VM.command_line`
+
+> VM Arguments:
+jvm_args: -XX:InitialRAMPercentage=50 -XX:MaxRAMPercentage=50
+java_command: /app.jar
+java_class_path (initial): /app.jar
+Launcher Type: SUN_STANDARD
+
+Aug 31 20:17:11 memory-test-deployment-7596dc4567-99k68 memorytest ######## Memory Stats ########
+Aug 31 20:17:11 memory-test-deployment-7596dc4567-99k68 memorytest Used Memory:0.1980401
+Aug 31 20:17:11 memory-test-deployment-7596dc4567-99k68 memorytest Free Memory:1.8778783
+Aug 31 20:17:11 memory-test-deployment-7596dc4567-99k68 memorytest Total Memory:2.0759184
+Aug 31 20:17:11 memory-test-deployment-7596dc4567-99k68 memorytest Max Memory:2.0759184
+Aug 31 20:17:11 memory-test-deployment-7596dc4567-99k68 memorytest ##############################
+
+OOM happens, leaving a stack trace and pod is not killed
+
+Aug 31 20:20:42 memory-test-deployment-7596dc4567-99k68 memorytest ######## Memory Stats ########
+Aug 31 20:20:42 memory-test-deployment-7596dc4567-99k68 memorytest Used Memory:1.931358
+Aug 31 20:20:42 memory-test-deployment-7596dc4567-99k68 memorytest Free Memory:0.14456037
+Aug 31 20:20:42 memory-test-deployment-7596dc4567-99k68 memorytest Total Memory:2.0759184
+Aug 31 20:20:42 memory-test-deployment-7596dc4567-99k68 memorytest Max Memory:2.0759184
+Aug 31 20:20:42 memory-test-deployment-7596dc4567-99k68 memorytest ##############################
+
+---
+
+With 
+ENTRYPOINT ["java","-XX:InitialRAMPercentage=80","-XX:MaxRAMPercentage=80","-jar","/app.jar"]
+
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 4Gi
+
+`jcmd 1 VM.flags`
+
+> -XX:CICompilerCount=2 -XX:InitialHeapSize=3437232128 -XX:InitialRAMPercentage=80.000000 -XX:MaxHeapSize=3437232128 -XX:MaxNewSize=1145700352 -XX:MaxRAM=4294967296 -XX:MaxRAMPercentage=80.000000 -XX:MinHeapDeltaBytes=196608 -XX:MinHeapSize=8388608 -XX:NewSize=1145700352 -XX:NonNMethodCodeHeapSize=5826188 -XX:NonProfiledCodeHeapSize=122916026 -XX:OldSize=2291531776 -XX:ProfiledCodeHeapSize=122916026 -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:SoftMaxHeapSize=3437232128 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseFastUnorderedTimeStamps -XX:+UseSerialGC
+
+`jcmd 1 VM.command_line`
+
+> VM Arguments:
+jvm_args: -XX:InitialRAMPercentage=80 -XX:MaxRAMPercentage=80
+java_command: /app.jar
+java_class_path (initial): /app.jar
+Launcher Type: SUN_STANDARD
+
+Aug 31 20:30:06 memory-test-deployment-7596dc4567-4qqnd memorytest ######## Memory Stats ########
+Aug 31 20:30:06 memory-test-deployment-7596dc4567-4qqnd memorytest Used Memory:0.274837
+Aug 31 20:30:06 memory-test-deployment-7596dc4567-4qqnd memorytest Free Memory:3.0478382
+Aug 31 20:30:06 memory-test-deployment-7596dc4567-4qqnd memorytest Total Memory:3.3226752
+Aug 31 20:30:06 memory-test-deployment-7596dc4567-4qqnd memorytest Max Memory:3.3226752
+Aug 31 20:30:06 memory-test-deployment-7596dc4567-4qqnd memorytest ##############################
+
+OOM happens, leaving a stack trace and pod is not killed
+
+Aug 31 20:33:05 memory-test-deployment-7596dc4567-4qqnd memorytest ######## Memory Stats ########
+Aug 31 20:33:05 memory-test-deployment-7596dc4567-4qqnd memorytest Used Memory:3.2271194
+Aug 31 20:33:05 memory-test-deployment-7596dc4567-4qqnd memorytest Free Memory:0.09555536
+Aug 31 20:33:05 memory-test-deployment-7596dc4567-4qqnd memorytest Total Memory:3.3226752
+Aug 31 20:33:05 memory-test-deployment-7596dc4567-4qqnd memorytest Max Memory:3.3226752
+Aug 31 20:33:05 memory-test-deployment-7596dc4567-4qqnd memorytest ##############################
+
+---
+
+With 
+ENTRYPOINT ["java","-XX:MaxRAMPercentage=80","-jar","/app.jar"]
+
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 4Gi
+
+`jcmd 1 VM.flags`
+
+> -XX:CICompilerCount=2 -XX:InitialHeapSize=67108864 -XX:MaxHeapSize=3437232128 -XX:MaxNewSize=1145700352 -XX:MaxRAM=4294967296 -XX:MaxRAMPercentage=80.000000 -XX:MinHeapDeltaBytes=196608 -XX:MinHeapSize=8388608 -XX:NewSize=22347776 -XX:NonNMethodCodeHeapSize=5826188 -XX:NonProfiledCodeHeapSize=122916026 -XX:OldSize=44761088 -XX:ProfiledCodeHeapSize=122916026 -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:SoftMaxHeapSize=3437232128 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseFastUnorderedTimeStamps -XX:+UseSerialGC
+
+`jcmd 1 VM.command_line`
+
+> VM Arguments:
+jvm_args: -XX:MaxRAMPercentage=80
+java_command: /app.jar
+java_class_path (initial): /app.jar
+Launcher Type: SUN_STANDARD
+
+Aug 31 20:37:24 memory-test-deployment-7596dc4567-pn8h8 memorytest ######## Memory Stats ########
+Aug 31 20:37:24 memory-test-deployment-7596dc4567-pn8h8 memorytest Used Memory:0.0291762
+Aug 31 20:37:24 memory-test-deployment-7596dc4567-pn8h8 memorytest Free Memory:0.035769977
+Aug 31 20:37:24 memory-test-deployment-7596dc4567-pn8h8 memorytest Total Memory:0.064946175
+Aug 31 20:37:24 memory-test-deployment-7596dc4567-pn8h8 memorytest Max Memory:3.3226752
+Aug 31 20:37:24 memory-test-deployment-7596dc4567-pn8h8 memorytest ##############################
+
+After eat-memory?chunks=100&size=100
+OOM happens, leaving a stack trace and pod is not killed
+
+Aug 31 20:40:02 memory-test-deployment-7596dc4567-pn8h8 memorytest ######## Memory Stats ########
+Aug 31 20:40:02 memory-test-deployment-7596dc4567-pn8h8 memorytest Used Memory:3.225735
+Aug 31 20:40:02 memory-test-deployment-7596dc4567-pn8h8 memorytest Free Memory:0.0969403
+Aug 31 20:40:02 memory-test-deployment-7596dc4567-pn8h8 memorytest Total Memory:3.3226752
+Aug 31 20:40:02 memory-test-deployment-7596dc4567-pn8h8 memorytest Max Memory:3.3226752
+Aug 31 20:40:02 memory-test-deployment-7596dc4567-pn8h8 memorytest ##############################
+
+---
+
+With 
+ENTRYPOINT ["java","-XX:InitialRAMPercentage=80","-XX:MaxRAMPercentage=80","-jar","/app.jar"]
+
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 4Gi
+
+`jcmd 1 VM.flags`
+
+> -XX:CICompilerCount=2 -XX:InitialHeapSize=3867148288 -XX:InitialRAMPercentage=90.000000 -XX:MaxHeapSize=3867148288 -XX:MaxNewSize=1289027584 -XX:MaxRAM=4294967296 -XX:MaxRAMPercentage=90.000000 -XX:MinHeapDeltaBytes=196608 -XX:MinHeapSize=8388608 -XX:NewSize=1289027584 -XX:NonNMethodCodeHeapSize=5826188 -XX:NonProfiledCodeHeapSize=122916026 -XX:OldSize=2578120704 -XX:ProfiledCodeHeapSize=122916026 -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:SoftMaxHeapSize=3867148288 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseFastUnorderedTimeStamps -XX:+UseSerialGC
+
+`jcmd 1 VM.command_line`
+
+> VM Arguments:
+jvm_args: -XX:InitialRAMPercentage=90 -XX:MaxRAMPercentage=90
+java_command: /app.jar
+java_class_path (initial): /app.jar
+Launcher Type: SUN_STANDARD
+
+Aug 31 20:42:24 memory-test-deployment-7596dc4567-rc94z memorytest ######## Memory Stats ########
+Aug 31 20:42:24 memory-test-deployment-7596dc4567-rc94z memorytest Used Memory:0.28749803
+Aug 31 20:42:24 memory-test-deployment-7596dc4567-rc94z memorytest Free Memory:3.4508066
+Aug 31 20:42:24 memory-test-deployment-7596dc4567-rc94z memorytest Total Memory:3.7383046
+Aug 31 20:42:24 memory-test-deployment-7596dc4567-rc94z memorytest Max Memory:3.7383046
+Aug 31 20:42:24 memory-test-deployment-7596dc4567-rc94z memorytest ##############################
+
+After eat-memory?chunks=100&size=100
+OOM happens, leaving a stack trace and pod is not killed
+
+Aug 31 20:47:25 memory-test-deployment-7596dc4567-rc94z memorytest ######## Memory Stats ########
+Aug 31 20:47:25 memory-test-deployment-7596dc4567-rc94z memorytest Used Memory:3.6418762
+Aug 31 20:47:25 memory-test-deployment-7596dc4567-rc94z memorytest Free Memory:0.09642781
+Aug 31 20:47:25 memory-test-deployment-7596dc4567-rc94z memorytest Total Memory:3.7383046
+Aug 31 20:47:25 memory-test-deployment-7596dc4567-rc94z memorytest Max Memory:3.7383046
+Aug 31 20:47:25 memory-test-deployment-7596dc4567-rc94z memorytest ##############################
+
+After eat-memory?chunks=100&size=100
+(tried again, still up, OOM happens again but pod stays up)
+
+---
+
+With 
+ENTRYPOINT ["java","-XX:InitialRAMPercentage=100","-XX:MaxRAMPercentage=100","-jar","/app.jar"]
+
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 4Gi
+
+`jcmd 1 VM.flags`
+
+> -XX:CICompilerCount=2 -XX:InitialHeapSize=4294967296 -XX:InitialRAMPercentage=100.000000 -XX:MaxHeapSize=4294967296 -XX:MaxNewSize=1431633920 -XX:MaxRAM=4294967296 -XX:MaxRAMPercentage=100.000000 -XX:MinHeapDeltaBytes=196608 -XX:MinHeapSize=8388608 -XX:NewSize=1431633920 -XX:NonNMethodCodeHeapSize=5826188 -XX:NonProfiledCodeHeapSize=122916026 -XX:OldSize=2863333376 -XX:ProfiledCodeHeapSize=122916026 -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:SoftMaxHeapSize=4294967296 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseFastUnorderedTimeStamps -XX:+UseSerialGC
+
+`jcmd 1 VM.command_line`
+
+>VM Arguments:
+jvm_args: -XX:InitialRAMPercentage=100 -XX:MaxRAMPercentage=100
+java_command: /app.jar
+java_class_path (initial): /app.jar
+Launcher Type: SUN_STANDARD
+
+Aug 31 21:03:16 memory-test-deployment-7596dc4567-6jcxv memorytest ######## Memory Stats ########
+Aug 31 21:03:16 memory-test-deployment-7596dc4567-6jcxv memorytest Used Memory:0.31827793
+Aug 31 21:03:16 memory-test-deployment-7596dc4567-6jcxv memorytest Free Memory:3.8335588
+Aug 31 21:03:16 memory-test-deployment-7596dc4567-6jcxv memorytest Total Memory:4.151837
+Aug 31 21:03:16 memory-test-deployment-7596dc4567-6jcxv memorytest Max Memory:4.151837
+Aug 31 21:03:16 memory-test-deployment-7596dc4567-6jcxv memorytest ##############################
+
+After eat-memory?chunks=100&size=100
+OOM happens, leaving a stack trace and pod is not killed
+
+Aug 31 21:06:01 memory-test-deployment-7596dc4567-6jcxv memorytest ######## Memory Stats ########
+Aug 31 21:06:01 memory-test-deployment-7596dc4567-6jcxv memorytest Used Memory:4.045038
+Aug 31 21:06:01 memory-test-deployment-7596dc4567-6jcxv memorytest Free Memory:0.10679836
+Aug 31 21:06:01 memory-test-deployment-7596dc4567-6jcxv memorytest Total Memory:4.151837
+Aug 31 21:06:01 memory-test-deployment-7596dc4567-6jcxv memorytest Max Memory:4.151837
+Aug 31 21:06:01 memory-test-deployment-7596dc4567-6jcxv memorytest ##############################
+
+After eat-memory?chunks=100&size=1000
+OOM happens, leaving a stack trace and pod IS killed
+(tested this one agin on a fresh start and it's the size 1000 isn't what immediatly kills it, it's the repeat)
+
 # Resources
 
 * https://medium.com/@yortuc/jvm-memory-allocation-in-docker-container-a26bbce3a3f2

@@ -16,4 +16,9 @@ spec:
     spec:
       containers:
         - name: memorytest
+          resources:
+            limits:
+              memory: 4Gi
+            requests:
+              memory: 4Gi
           image: <replace-with-registry>/memory-test:latest
