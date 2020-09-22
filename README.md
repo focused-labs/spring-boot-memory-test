@@ -1,4 +1,6 @@
-# The concise Guide to JDK 14 memory on Kubernetes
+# The No-Nonsense Guide to JVM 14 Memory on Kubernetes
+
+This article is born out of frustration I had getting a direct answer to the question of how the modern JVM handles memory on containers. Let's get straight down to brass tacks.
 
 The JVM as of JDK 14 has `UseContainerSupport` turned on by default. Here are some interesting defaults.
 
@@ -27,24 +29,24 @@ Outputs:
 
 `MinRAMPercentage` and `InitialRAMPercentage` are tricky, [this Stackoverflow answer is the best explanation I've read so far](https://stackoverflow.com/a/54297753). 
  
-`InitialRAMPercentage` - Used if `InitialHeapSize` and `Xms` are not set. In this case, if `InitialHeapSize` is 0. [Source reference](http://hg.openjdk.java.net/jdk-updates/jdk11u/file/a7f53869e42b/src/hotspot/share/runtime/arguments.cpp#l1816). *I've never had much luck getting this one to work as I would expect.**
+`InitialRAMPercentage` - Used if `InitialHeapSize` and `Xms` are not set. In this case, if `InitialHeapSize` is 0. [Source reference](http://hg.openjdk.java.net/jdk-updates/jdk11u/file/a7f53869e42b/src/hotspot/share/runtime/arguments.cpp#l1816). *I've never had much luck getting this one to work as expected.*
 `MinRAMPercentage` - Used if `MaxHeapSize` and `Xmx` are not set. In this case, not set meaning, default value for `MaxHeapSize` and `Xmx` absent. [Source reference](http://hg.openjdk.java.net/jdk-updates/jdk11u/file/a7f53869e42b/src/hotspot/share/runtime/arguments.cpp#l1750).
 
 # MaxRAMPercentage and Kubernetes
 
 The observations below are based on some tests using a [simple memory testing application I wrote](https://github.com/JamesMcMahon/spring-boot-memory-test).
 
-## If no limit is set on the pod
+## If no limit are set on the pod
 
 The JVM will use up to the MaxRAMPercentage of the Node's memory. If the pod approaches the Node's memory limit, Kubernetes will kill the pod rather than throwing an OOM Exception.
 
-# Limits set on the pod
+## Limits set on the pod
 
-## For less than 100%
+### For less than 100%
 
 The JVM will use up to the MaxRAMPercentage of the limit. The pod is not killed, instead of throwing an OOM exception.
 
-## For 100%
+### For 100%
 
 The JVM will use up 100% of the memory limit. I saw this occasionally throw an OOM exception, continued memory pressure, and Kubernetes will kill the pod.
 
@@ -55,6 +57,8 @@ The JVM will use up 100% of the memory limit. I saw this occasionally throw an O
 This question doesn't have a cut and dry answer. I can say 100% is a bad idea, but what's optimal is going to depend on the memory footprint of your application (with the JVM using system memory for [Metaspace](https://www.baeldung.com/java-permgen-metaspace)) and the container you are using.
 
 I've heard some advice that states that you should leave at least 1gig for the OS at all times. I've also heard 75% recommended. The truth is you are going to need to test out a few different configurations for your app and see what works for you.
+
+---
 
 That is the short version of a bunch of research, and as close to TLDR I could get for a complex topic. With the JDK 15 right around, I will be looking to revise if there are any notable changes.
 
