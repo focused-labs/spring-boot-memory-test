@@ -395,3 +395,4 @@ Aug 31 22:00:17 memory-test-deployment-7596dc4567-sm9sd memorytest #############
 * https://merikan.com/2019/04/jvm-in-a-container/
 * https://srvaroa.github.io/jvm/kubernetes/memory/docker/oomkiller/2019/05/29/k8s-and-java.html
 * https://stackoverflow.com/questions/54292282/clarification-of-meaning-new-jvm-memory-parameters-initialrampercentage-and-minr
+* https://blog.nebrass.fr/playing-with-the-jvm-inside-docker-containers/
