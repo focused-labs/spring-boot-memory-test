@@ -30,35 +30,61 @@ Outputs:
 `MaxRAMPercentage` is key here. The JVM defaults to 25%.
 
 `MinRAMPercentage` and `InitialRAMPercentage` are tricky, [this Stackoverflow answer is the best explanation I've read so far](https://stackoverflow.com/a/54297753). 
+
+Here is a quick summary of that post:
  
 `InitialRAMPercentage` - Used if `InitialHeapSize` and `Xms` are not set. In this case, if `InitialHeapSize` is 0. [Source reference](http://hg.openjdk.java.net/jdk-updates/jdk11u/file/a7f53869e42b/src/hotspot/share/runtime/arguments.cpp#l1816). *I've never had much luck getting this one to work as expected.*
+
 `MinRAMPercentage` - Used if `MaxHeapSize` and `Xmx` are not set. In this case, not set meaning, default value for `MaxHeapSize` and `Xmx` absent. [Source reference](http://hg.openjdk.java.net/jdk-updates/jdk11u/file/a7f53869e42b/src/hotspot/share/runtime/arguments.cpp#l1750).
 
 # MaxRAMPercentage and Kubernetes
 
 The observations below are based on some tests using a [simple memory testing application I wrote](https://github.com/JamesMcMahon/spring-boot-memory-test).
 
+You can set `MaxRAMPercentage` (and other JVM arguments) by editing your dockerfile:
+
+```
+ENTRYPOINT 
+["java","-XX:InitialRAMPercentage=10","-XX:MaxRAMPercentage=75","-jar","/app.jar"]
+```
+
+[Limits and requests](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) are set using
+
+```
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      memory: 2Gi
+```
+
 ## If no limit are set on the pod
 
 The JVM will use up to the MaxRAMPercentage of the Node's memory. If the pod approaches the Node's memory limit, Kubernetes will kill the pod rather than throwing an OOM Exception.
 
-## Limits set on the pod
+## Limits set on the container
 
-### For less than 100%
+### For less than 100% `MaxRAMPercentage`
 
 The JVM will use up to the MaxRAMPercentage of the limit. The pod is not killed, instead of throwing an OOM exception.
 
-### For 100%
+### For 100% `MaxRAMPercentage`
 
-The JVM will use up 100% of the memory limit. I saw this occasionally throw an OOM exception, continued memory pressure, and Kubernetes will kill the pod.
+The JVM will use up 100% of the memory limit. I saw this occasionally throw an OOM exception. With continued memory pressure Kubernetes will kill the pod.
 
 # What to set as max?
 
-25% as a default seems relatively low for `MaxRAMPercentage`. So what should you set it to for your application?
+Assuming you are running a single container per pod, 25% as a default seems relatively low for `MaxRAMPercentage`. So what should you set it to for your application?
 
 This question doesn't have a cut and dry answer. I can say 100% is a bad idea, but what's optimal is going to depend on the memory footprint of your application (with the JVM using system memory for [Metaspace](https://www.baeldung.com/java-permgen-metaspace)) and the container you are using.
 
-I've heard some advice that states that you should leave at least 1gig for the OS at all times. I've also heard 75% recommended. The truth is you are going to need to test out a few different configurations for your app and see what works for you.
+I've heard some advice that states that you should leave at least 1gig for the OS at all times. I've also heard 75% recommended. Personally, we are using 80% for our application but I am also keeping an eye on and adjusting as needed. The truth is you are going to need to test out a few different configurations for your app and see what works for you.
+
+# What about requests?
+
+Requests are an intresting one. I haven't seen them affect the start heap size of the JVM so they are just used for Node scheduling like any other K8 pod. The JVM tends to increase heap size and then never give it back, or very slowly give them back depending on your settings. *(Heap reclamation is a large enough subject for another post entirely.)*
+
+Personally I've been setting requests to 50% of my limit. Depending on how fast your application is hitting that max heap I could also see setting this to 100% of the limit to help Kubernetes put your application on the approriate node.
 
 ---
 
