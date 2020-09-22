@@ -34,6 +34,23 @@ Max Memory:3.3165803
 
 ---
 
+# Defaults
+
+docker run -m 1GB openjdk:14 java \                                                                 master ✱
+          -XX:+PrintFlagsFinal -version \
+          | grep -E "UseContainerSupport | InitialRAMPercentage | MaxRAMPercentage | MinRAMPercentage | MinHeapFreeRatio | MaxHeapFreeRatio"
+   double InitialRAMPercentage                     = 1.562500                                  {product} {default}
+    uintx MaxHeapFreeRatio                         = 70                                     {manageable} {default}
+   double MaxRAMPercentage                         = 25.000000                                 {product} {default}
+    uintx MinHeapFreeRatio                         = 40                                     {manageable} {default}
+   double MinRAMPercentage                         = 50.000000                                 {product} {default}
+     bool UseContainerSupport                      = true                                      {product} {default}
+openjdk version "14.0.2" 2020-07-14
+OpenJDK Runtime Environment (build 14.0.2+12-46)
+OpenJDK 64-Bit Server VM (build 14.0.2+12-46, mixed mode, sharing)
+
+---
+
 # 2 Replicas
 
 Aug 30 20:43:34 memory-test-deployment-558bc598c5-7ckg4 memorytest ######## Memory Stats ########
