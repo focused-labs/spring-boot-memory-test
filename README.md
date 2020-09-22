@@ -14,7 +14,8 @@ docker run -m 1GB openjdk:14 java \
 
 Outputs:
 
->    double InitialRAMPercentage                     = 1.562500                                  {product} {default}
+```
+    double InitialRAMPercentage                      = 1.562500                                  {product} {default}
       uintx MaxHeapFreeRatio                         = 70                                     {manageable} {default}
      double MaxRAMPercentage                         = 25.000000                                 {product} {default}
       uintx MinHeapFreeRatio                         = 40                                     {manageable} {default}
@@ -23,6 +24,7 @@ Outputs:
   openjdk version "14.0.2" 2020-07-14
   OpenJDK Runtime Environment (build 14.0.2+12-46)
   OpenJDK 64-Bit Server VM (build 14.0.2+12-46, mixed mode, sharing)
+```
 
 
 `MaxRAMPercentage` is key here. The JVM defaults to 25%.
